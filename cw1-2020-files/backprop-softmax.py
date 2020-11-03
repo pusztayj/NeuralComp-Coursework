@@ -12,13 +12,18 @@ import fnn_utils
 # Choose which one to use by updating the variable phi in the code below.
 
 def sigmoid(x):
-    return # TODO
+    return np.array([1 / (1 + np.exp(-i)) for i in x])
 def sigmoid_d(x):
-    return # TODO
+    return sigmoid(x)*(1 - sigmoid(x))
 def relu(x):
-    return # TODO
+    return np.array([max(0,i) for i in x])
 def relu_d(x):
-    return # TODO
+    if x < 0:
+        return 0
+    elif x > 0:
+        return 1
+    else:
+        return None
        
 class BackPropagation:
 
@@ -38,13 +43,13 @@ class BackPropagation:
         self.crossings = [(1 if i < 1 else network_shape[i-1],network_shape[i]) for i in range(self.L)]
 
         # Create the network
-        self.a             = [np.zeros(m) for m in network_shape]
-        self.db            = [np.zeros(m) for m in network_shape]
-        self.b             = [np.random.normal(0,1/10,m) for m in network_shape]
-        self.z             = [np.zeros(m) for m in network_shape]
-        self.delta         = [np.zeros(m) for m in network_shape]
-        self.w             = [np.random.uniform(-1/np.sqrt(m0),1/np.sqrt(m0),(m1,m0)) for (m0,m1) in self.crossings]
-        self.dw            = [np.zeros((m1,m0)) for (m0,m1) in self.crossings]
+        self.a             = [np.zeros(m) for m in network_shape] # output from layer
+        self.db            = [np.zeros(m) for m in network_shape] # local gradiant for bias?
+        self.b             = [np.random.normal(0,1/10,m) for m in network_shape] # bias
+        self.z             = [np.zeros(m) for m in network_shape] # neurons
+        self.delta         = [np.zeros(m) for m in network_shape] 
+        self.w             = [np.random.uniform(-1/np.sqrt(m0),1/np.sqrt(m0),(m1,m0)) for (m0,m1) in self.crossings] # weights
+        self.dw            = [np.zeros((m1,m0)) for (m0,m1) in self.crossings] # derivative of weights
         self.nabla_C_out   = np.zeros(network_shape[-1])
 
         # Choose activation function
@@ -58,9 +63,15 @@ class BackPropagation:
         """ Set first activation in input layer equal to the input vector x (a 24x24 picture), 
             feed forward through the layers, then return the activations of the last layer.
         """
-        self.a[0] = x - 0.5      # Center the input values between [-0.5,0.5]
         # TODO
-        
+        self.a[0] = x - 0.5      # Center the input values between [-0.5,0.5]
+        for i in range(1,len(self.z)):
+            self.z[i] = np.dot(self.w[i],self.a[i-1]) + self.b[i]
+            if i < 4:
+                self.a[i] = self.phi(self.z[i])
+            else: # the softmax layer
+                self.a[i] = self.softmax(self.z[i])
+        np.set_printoptions(suppress=True)
         return(self.a[self.L-1])
 
     def softmax(self, z):
@@ -188,7 +199,8 @@ class BackPropagation:
 
 def main():
     pass
-    #bp = BackPropagation()
+    bp = BackPropagation()
+    print(bp.forward(bp.trainX[0]))
     #bp.sgd()
 
 if __name__ == "__main__":
