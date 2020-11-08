@@ -18,6 +18,10 @@ def sigmoid_d(x):
 def relu(x):
     return np.array([max(0,i) for i in x])
 def relu_d(x):
+    # return # TODO
+    if type(x) is np.ndarray:
+        return np.array([1 if i >0 else 0 for i in x ])
+        
     if x < 0:
         return 0
     elif x > 0:
@@ -89,15 +93,31 @@ class BackPropagation:
         """ Compute local gradients, then return gradients of network.
         """
         # TODO
-        pass
+        # Local Gradients for Output layer
+        pred = self.forward(x)
+        self.delta[self.L-1] = pred - y
+        
+        # Local Gradients for Hidden layer l
+        for i in range(len(self.delta)-2, -1, -1):
+            # print(self.delta[i])
+            # print(i)
+            self.delta[i] = self.phi_d(self.z[i]) * (self.w[i+1].T @ self.delta[i+1])
+
+        # partial derivatives
+        for i in range(1, self.L):
+            self.dw[i] = np.asmatrix(self.delta[i]).T @ np.asmatrix(self.a[i-1])
+            self.db[i] = self.delta[i]
+        
 
     # Return predicted image class for input x
     def predict(self, x):
-        return # TODO
+        # return # TODO
+        return np.argmax(self.forward(x))
 
     # Return predicted percentage for class j
     def predict_pct(self, j):
-        return # TODO 
+        # return # TODO 
+        return self.a[self.L-1][j]
     
     def evaluate(self, X, Y, N):
         """ Evaluate the network on a random subset of size N. """
@@ -110,7 +130,8 @@ class BackPropagation:
     def sgd(self,
             batch_size=50,
             epsilon=0.01,
-            epochs=1000):
+            # epochs=1000):
+            epochs=5):
 
         """ Mini-batch gradient descent on training data.
 
@@ -148,6 +169,8 @@ class BackPropagation:
                 
                 # Reset buffer containing updates
                 # TODO
+                dw_buffer = [i*0 for i in self.dw]
+                db_buffer = [i*0 for i in self.db]
                 
                 # Mini-batch loop
                 for i in range(batch_size):
@@ -158,9 +181,13 @@ class BackPropagation:
 
                     # Feed forward inputs
                     # TODO
+                    self.backward(x, y)     # self.forward is included in self.backward
                     
                     # Compute gradients
                     # TODO
+                    for l in range(self.L):
+                        dw_buffer[l] += self.dw[l]
+                        db_buffer[l] += self.db[l]
 
                     # Update loss log
                     batch_loss += self.loss(self.a[self.L-1], y)
@@ -170,9 +197,11 @@ class BackPropagation:
                                     
                 # Update the weights at the end of the mini-batch using gradient descent
                 for l in range(1,self.L):
-                    #self.w[l] = # TODO
-                    #self.b[l] = # TODO
                     pass
+                    # self.w[l] = # TODO
+                    self.w[l] -= epsilon * (dw_buffer[l] / batch_size)
+                    # self.b[l] = # TODO
+                    self.b[l] -= epsilon * (db_buffer[l] / batch_size)
                 
                 # Update logs
                 loss_log.append( batch_loss / batch_size )
@@ -203,7 +232,7 @@ def main():
     pass
     bp = BackPropagation()
     print(bp.forward(bp.trainX[0]))
-    #bp.sgd()
+    bp.sgd()
 
 if __name__ == "__main__":
     main()
