@@ -82,6 +82,8 @@ class BackPropagation:
     def loss(self, pred, y):
         # TODO
         pass
+        p_y = pred[np.argmax(y)]
+        return -np.log(p_y)
     
     def backward(self,x, y):
         """ Compute local gradients, then return gradients of network.
