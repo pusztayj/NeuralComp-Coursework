@@ -60,7 +60,9 @@ class BackPropagation:
             feed forward through the layers, then return the activations of the last layer.
         """
         # TODO
-        self.a[0] = x - 0.5      # Center the input values between [-0.5,0.5]
+        # self.a[0] = x - 0.5      # Center the input values between [-0.5,0.5]
+        self.a[0] = x/255 - 0.5    # attempt to normalize
+         
         for i in range(1,len(self.z)):
             self.z[i] = np.dot(self.w[i],self.a[i-1]) + self.b[i]
             if i < 4:
