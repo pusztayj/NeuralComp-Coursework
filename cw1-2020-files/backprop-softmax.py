@@ -14,20 +14,12 @@ import fnn_utils
 def sigmoid(x):
     return np.array([1 / (1 + np.exp(-i)) for i in x])
 def sigmoid_d(x):
-    return sigmoid(x)*(1 - sigmoid(x))
+    return np.array([float(sigmoid([i])*(1-sigmoid([i]))) for i in x])
 def relu(x):
     return np.array([max(0,i) for i in x])
 def relu_d(x):
-    # return # TODO
     if type(x) is np.ndarray:
         return np.array([1 if i >0 else 0 for i in x ])
-        
-    if x < 0:
-        return 0
-    elif x > 0:
-        return 1
-    else:
-        return None
        
 class BackPropagation:
 
@@ -232,7 +224,7 @@ def main():
     pass
     bp = BackPropagation()
     print(bp.forward(bp.trainX[0]))
-    bp.sgd()
+    #bp.sgd()
 
 if __name__ == "__main__":
     main()
