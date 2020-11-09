@@ -77,7 +77,9 @@ class BackPropagation:
 
     def loss(self, pred, y):
         # TODO
-        pass
+        
+        # Cost function 
+        # Based on page: 8, slide: l06-softmax
         p_y = pred[np.argmax(y)]
         return -np.log(p_y)
     
@@ -85,17 +87,22 @@ class BackPropagation:
         """ Compute local gradients, then return gradients of network.
         """
         # TODO
-        # Local Gradients for Output layer
-        pred = self.forward(x)
+        
+        # Local Gradients for Output layer 
+        # Based on page: 10, slide: l06-softmax
+        pred = self.forward(x)          # using forward function
+        # pred = self.a[self.L-1]       # not using forward function (PS: if not using self.forward here, we need to add it in self.sgd )
         self.delta[self.L-1] = pred - y
         
         # Local Gradients for Hidden layer l
+        # Based on page: 15, slide: l05-backpropagation
         for i in range(len(self.delta)-2, -1, -1):
             # print(self.delta[i])
             # print(i)
             self.delta[i] = self.phi_d(self.z[i]) * (self.w[i+1].T @ self.delta[i+1])
 
-        # partial derivatives
+        # Partial derivatives
+        # Based on page: 16, slide: l05-backpropagation
         for i in range(1, self.L):
             self.dw[i] = np.asmatrix(self.delta[i]).T @ np.asmatrix(self.a[i-1])
             self.db[i] = self.delta[i]
@@ -104,6 +111,7 @@ class BackPropagation:
     # Return predicted image class for input x
     def predict(self, x):
         # return # TODO
+        # Just go through the forward function to make a prediction
         return np.argmax(self.forward(x))
 
     # Return predicted percentage for class j
@@ -123,7 +131,7 @@ class BackPropagation:
             batch_size=50,
             epsilon=0.01,
             # epochs=1000):
-            epochs=5):
+            epochs=5):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
 
         """ Mini-batch gradient descent on training data.
 
@@ -161,6 +169,8 @@ class BackPropagation:
                 
                 # Reset buffer containing updates
                 # TODO
+                # Make empty containers to store the sum value of partial derivatives in one batch. 
+                # Based on page: 18, slide: l05-backpropagation
                 dw_buffer = [i*0 for i in self.dw]
                 db_buffer = [i*0 for i in self.db]
                 
@@ -177,6 +187,8 @@ class BackPropagation:
                     
                     # Compute gradients
                     # TODO
+                    # To sum the partial derivatives for each parameter. 
+                    # Based on page: 18, slide: l05-backpropagation
                     for l in range(self.L):
                         dw_buffer[l] += self.dw[l]
                         db_buffer[l] += self.db[l]
@@ -189,7 +201,7 @@ class BackPropagation:
                                     
                 # Update the weights at the end of the mini-batch using gradient descent
                 for l in range(1,self.L):
-                    pass
+                    # Based on page: 18, slide: l05-backpropagation
                     # self.w[l] = # TODO
                     self.w[l] -= epsilon * (dw_buffer[l] / batch_size)
                     # self.b[l] = # TODO
