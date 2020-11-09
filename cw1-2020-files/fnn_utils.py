@@ -38,6 +38,7 @@ def display_predictions(network,show_pct=False):
                 labelbottom='off') # labels along the bottom edge are off
             axarr_p[y,x].axes.get_yaxis().set_visible(False)
     fig_p.canvas.draw()    
+    fig_p.canvas.flush_events()    # Help refresh the figure. we can delete it later if necessary
 
 def plot_stats(a, loss, test_acc_log, train_acc_log):
 
@@ -61,6 +62,7 @@ def plot_stats(a, loss, test_acc_log, train_acc_log):
     axarr[2].plot(loss)
 
     fig.canvas.draw()
+    fig.canvas.flush_events()   # Help refresh the figure. we can delete it later if necessary
 
 def load_mnist(path, kind='train'):
     import os

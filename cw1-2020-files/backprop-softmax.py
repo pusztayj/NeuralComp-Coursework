@@ -224,7 +224,8 @@ def main():
     pass
     bp = BackPropagation()
     print(bp.forward(bp.trainX[0]))
-    #bp.sgd()
+    bp.sgd()
+    input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
 
 if __name__ == "__main__":
     main()
