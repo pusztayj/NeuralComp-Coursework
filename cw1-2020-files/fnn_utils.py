@@ -53,8 +53,16 @@ def plot_stats(a, loss, test_acc_log, train_acc_log):
     # Plot accuracies
     axarr[0].clear()
     axarr[0].set_title("Classification accuracy", fontsize=18)
-    axarr[0].plot(test_acc_log)
+    axarr[0].plot(test_acc_log, "o-")
+    for x,y in enumerate(test_acc_log):
+        if x % max(int(len(test_acc_log)/5),1) == 0 or x == len(test_acc_log)-1:
+            y_position = y - 0.15 if y-0.15>0 else y + 0.15
+            axarr[0].text(x, y_position, '%.3f' % y, fontdict={'fontsize':10})
+        
     axarr[0].plot(train_acc_log)
+    # for x,y in enumerate(train_acc_log):
+        # axarr[0].text(x, y-0.05, '%.3f' % y, fontdict={'fontsize':10})
+        
     axarr[0].legend(["Test", "Training"])
 
     # Plot activations
