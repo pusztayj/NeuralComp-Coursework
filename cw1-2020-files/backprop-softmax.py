@@ -133,7 +133,7 @@ class BackPropagation:
             batch_size=50,
             epsilon=0.01,
             # epochs=1000):
-            epochs=5):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
+            epochs=10):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
 
         """ Mini-batch gradient descent on training data.
 
@@ -230,15 +230,27 @@ class BackPropagation:
                 # Reset batch average
                 for l in range(self.L):
                     self.batch_a[l].fill(0.0)
+        
+        return test_acc_log
 
 
 # Start training with default parameters.
 
 def main():
-    pass
+    start_time = time.time()
+    
     bp = BackPropagation()
-    print(bp.forward(bp.trainX[0]))
-    bp.sgd()
+    test_acc_log = bp.sgd()
+    
+    end_time = time.time()
+    
+    print(str())
+    print("Accuracy of %s epochs: %s" % (len(test_acc_log), test_acc_log))
+    print("The Highest Accuracy is in epoch:", np.argmax(test_acc_log) + 1)
+    print("Time consumption:", int(end_time - start_time), "seconds")
+    print("The Final Accuracy:", test_acc_log[-1])
+    print(str())
+    
     input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
 
 if __name__ == "__main__":
