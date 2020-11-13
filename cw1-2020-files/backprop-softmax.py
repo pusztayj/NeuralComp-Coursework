@@ -65,7 +65,7 @@ class BackPropagation:
          
         for i in range(1,len(self.z)):
             self.z[i] = np.dot(self.w[i],self.a[i-1]) + self.b[i]
-            if i < 4:
+            if i < self.L - 1:
                 self.a[i] = self.phi(self.z[i])
             else: # the softmax layer
                 self.a[i] = self.softmax(self.z[i])
