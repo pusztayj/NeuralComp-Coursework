@@ -244,14 +244,44 @@ def main():
     
     end_time = time.time()
     
-    print(str())
-    print("Accuracy of %s epochs: %s" % (len(test_acc_log), test_acc_log))
-    print("The Highest Accuracy is in epoch:", np.argmax(test_acc_log) + 1)
-    print("Time consumption:", int(end_time - start_time), "seconds")
-    print("The Final Accuracy:", test_acc_log[-1])
-    print(str())
+    print_msg(test_acc_log, int(end_time - start_time))  
     
     input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
+   
+
+def find_epoch():
+    epoch_pool = range(1, 50)
+    best_epoch_list = list()
+    for epoch in epoch_pool:
+        start_time = time.time()
+        bp = BackPropagation()
+        test_acc_log = bp.sgd(epochs=epoch)
+        end_time = time.time()
+        
+        best_epoch = np.argmax(test_acc_log) + 1
+        best_epoch_list.append(best_epoch)
+        
+        print_msg(test_acc_log, int(end_time - start_time))     
+        
+    from collections import Counter
+    best_epoch = Counter(best_epoch_list).most_common(1)[0][0]
+    print("epoch_pool:", epoch_pool)
+    print("best_epoch_list:", best_epoch_list)
+    print("best_epoch:", best_epoch)
+    return best_epoch
+
+    
+def print_msg(test_acc_log, time_consumption=str(), epsilon=None, batch_size=None):
+    print(str())
+    if epsilon:
+        print("Epsilon:", epsilon)
+    if batch_size:
+        print("Batch_size:", batch_size)
+    print("Accuracy of %s epochs: %s" % (len(test_acc_log), test_acc_log))
+    print("The Highest Accuracy is %s in epoch: %s" % (max(test_acc_log), np.argmax(test_acc_log) + 1))
+    print("Time consumption:", time_consumption, "seconds")
+    print("The Final Accuracy:", test_acc_log[-1])
+    print(str())
 
 if __name__ == "__main__":
     main()
