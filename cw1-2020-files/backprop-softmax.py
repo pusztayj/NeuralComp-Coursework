@@ -266,7 +266,8 @@ def main():
    
 
 def find_epoch():
-    epoch_pool = range(1, 50)
+    # epoch_pool = list(range(25,30))
+    epoch_pool = [50,100,150,200]
     best_epoch_list = list()
     for epoch in epoch_pool:
         start_time = time.time()
@@ -287,13 +288,13 @@ def find_epoch():
     return best_epoch
 
 
-def find_epsilon(epoch=5):
+def find_epsilon(epoch=15, batch_size=20):
     epsilon_pool = [0.001,0.003,0.005,0.007,0.009,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.4,0.6,0.8]
     final_accuracy = list()
     for epsilon in epsilon_pool:
         start_time = time.time()
         bp = BackPropagation()
-        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon)
+        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
@@ -307,7 +308,7 @@ def find_epsilon(epoch=5):
     return best_epsilon    
    
    
-def find_batch_size(epoch=5, epsilon=0.01):
+def find_batch_size(epoch=15, epsilon=0.01):
     batch_size_pool = [1,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,200]
     final_accuracy = list()
     for batch_size in batch_size_pool:
