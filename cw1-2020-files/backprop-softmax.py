@@ -239,8 +239,24 @@ class BackPropagation:
 def main():
     start_time = time.time()
     
+    # Find a best epoch
+    # best_epoch = find_epoch()
+    
+    # Find a best learning rate
+    # best_epsilon = find_epsilon(epoch=best_epoch)
+    # best_epsilon = find_epsilon()
+    
+    # Find a best minibatch size
+    # best_batch_size = find_batch_size(epoch=best_epoch, epsilon=best_epsilon)
+    # best_batch_size = find_batch_size()
+    
+    # Final test
     bp = BackPropagation()
-    test_acc_log = bp.sgd()
+    test_acc_log = bp.sgd(
+                            # batch_size=best_batch_size, 
+                            # epsilon=best_epsilon, 
+                            # epochs=best_epoch,
+                            )
     
     end_time = time.time()
     
@@ -270,7 +286,47 @@ def find_epoch():
     print("best_epoch:", best_epoch)
     return best_epoch
 
+
+def find_epsilon(epoch=5):
+    epsilon_pool = [0.001,0.003,0.005,0.007,0.009,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.4,0.6,0.8]
+    final_accuracy = list()
+    for epsilon in epsilon_pool:
+        start_time = time.time()
+        bp = BackPropagation()
+        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon)
+        end_time = time.time()
+        
+        final_accuracy.append(test_acc_log[-1]) 
+        
+        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon)  
     
+    best_epsilon = epsilon_pool[np.argmax(final_accuracy)]
+    print("epsilon_pool:", epsilon_pool)
+    print("final_accuracy:", final_accuracy)
+    print("best_epsilon:", best_epsilon)
+    return best_epsilon    
+   
+   
+def find_batch_size(epoch=5, epsilon=0.01):
+    batch_size_pool = [1,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,200]
+    final_accuracy = list()
+    for batch_size in batch_size_pool:
+        start_time = time.time()
+        bp = BackPropagation()
+        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
+        end_time = time.time()
+        
+        final_accuracy.append(test_acc_log[-1]) 
+        
+        print_msg(test_acc_log, int(end_time - start_time), batch_size=batch_size)  
+    
+    best_batch_size = batch_size_pool[np.argmax(final_accuracy)]
+    print("batch_size_pool:", batch_size_pool)
+    print("final_accuracy:", final_accuracy)
+    print("best_batch_size:", best_batch_size)
+    return best_batch_size 
+
+
 def print_msg(test_acc_log, time_consumption=str(), epsilon=None, batch_size=None):
     print(str())
     if epsilon:
@@ -282,6 +338,7 @@ def print_msg(test_acc_log, time_consumption=str(), epsilon=None, batch_size=Non
     print("Time consumption:", time_consumption, "seconds")
     print("The Final Accuracy:", test_acc_log[-1])
     print(str())
+
 
 if __name__ == "__main__":
     main()
