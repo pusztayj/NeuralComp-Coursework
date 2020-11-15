@@ -265,20 +265,20 @@ def main():
     input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
    
 
-def find_epoch():
+def find_epoch(epsilon=0.01, batch_size=50):
     # epoch_pool = list(range(25,30))
     epoch_pool = [50,100,150,200]
     best_epoch_list = list()
     for epoch in epoch_pool:
         start_time = time.time()
         bp = BackPropagation()
-        test_acc_log = bp.sgd(epochs=epoch)
+        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
         end_time = time.time()
         
         best_epoch = np.argmax(test_acc_log) + 1
         best_epoch_list.append(best_epoch)
         
-        print_msg(test_acc_log, int(end_time - start_time))     
+        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)     
         
     from collections import Counter
     best_epoch = Counter(best_epoch_list).most_common(1)[0][0]
@@ -288,7 +288,7 @@ def find_epoch():
     return best_epoch
 
 
-def find_epsilon(epoch=15, batch_size=20):
+def find_epsilon(epoch=15, batch_size=50):
     epsilon_pool = [0.001,0.003,0.005,0.007,0.009,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.4,0.6,0.8]
     final_accuracy = list()
     for epsilon in epsilon_pool:
@@ -299,7 +299,7 @@ def find_epsilon(epoch=15, batch_size=20):
         
         final_accuracy.append(test_acc_log[-1]) 
         
-        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon)  
+        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
     best_epsilon = epsilon_pool[np.argmax(final_accuracy)]
     print("epsilon_pool:", epsilon_pool)
@@ -319,7 +319,7 @@ def find_batch_size(epoch=15, epsilon=0.01):
         
         final_accuracy.append(test_acc_log[-1]) 
         
-        print_msg(test_acc_log, int(end_time - start_time), batch_size=batch_size)  
+        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
     best_batch_size = batch_size_pool[np.argmax(final_accuracy)]
     print("batch_size_pool:", batch_size_pool)
