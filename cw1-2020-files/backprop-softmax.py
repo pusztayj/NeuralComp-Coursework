@@ -231,6 +231,7 @@ class BackPropagation:
                 for l in range(self.L):
                     self.batch_a[l].fill(0.0)
         
+        fnn_utils.save_pic(epochs, epsilon, batch_size)
         return test_acc_log
 
 

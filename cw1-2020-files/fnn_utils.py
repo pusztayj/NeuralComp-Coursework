@@ -3,6 +3,8 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import time
+import os
 
 plt.close("all")
 
@@ -53,8 +55,16 @@ def plot_stats(a, loss, test_acc_log, train_acc_log):
     # Plot accuracies
     axarr[0].clear()
     axarr[0].set_title("Classification accuracy", fontsize=18)
-    axarr[0].plot(test_acc_log)
+    axarr[0].plot(test_acc_log, "o-")
+    for x,y in enumerate(test_acc_log):
+        if x % max(int(len(test_acc_log)/5),1) == 0 or x == len(test_acc_log)-1:
+            y_position = y - 0.15 if y-0.15>0 else y + 0.15
+            axarr[0].text(x, y_position, '%.3f' % y, fontdict={'fontsize':10})
+        
     axarr[0].plot(train_acc_log)
+    # for x,y in enumerate(train_acc_log):
+        # axarr[0].text(x, y-0.05, '%.3f' % y, fontdict={'fontsize':10})
+        
     axarr[0].legend(["Test", "Training"])
 
     # Plot activations
@@ -69,6 +79,15 @@ def plot_stats(a, loss, test_acc_log, train_acc_log):
 
     fig.canvas.draw()
     plt.pause(0.01)
+
+
+def save_pic(epochs, epsilon, batch_size):
+    time_stamp = int(time.time())
+    folder = "Figure"
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    file_name = "%s_%s_%s.%s.jpg" % (epochs, epsilon, batch_size, time_stamp)
+    fig.savefig('./%s/%s' % (folder,file_name))
 
 
 def load_mnist(path, kind='train'):
