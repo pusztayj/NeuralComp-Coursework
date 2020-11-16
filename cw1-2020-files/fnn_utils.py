@@ -81,12 +81,12 @@ def plot_stats(a, loss, test_acc_log, train_acc_log):
     plt.pause(0.01)
 
 
-def save_pic(epochs, epsilon, batch_size):
+def save_pic(epochs, epsilon, batch_size, network_shape):
     time_stamp = int(time.time())
     folder = "Figure"
     if not os.path.exists(folder):
         os.mkdir(folder)
-    file_name = "%s_%s_%s.%s.jpg" % (epochs, epsilon, batch_size, time_stamp)
+    file_name = "%s_%s_%s_%s.%s.jpg" % (network_shape, epochs, epsilon, batch_size, time_stamp)
     fig.savefig('./%s/%s' % (folder,file_name))
 
 

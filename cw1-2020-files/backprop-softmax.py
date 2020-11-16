@@ -54,6 +54,8 @@ class BackPropagation:
         
         # Store activations over the batch for plotting
         self.batch_a       = [np.zeros(m) for m in network_shape]
+        
+        self.network_shape = network_shape
                 
     def forward(self, x):
         """ Set first activation in input layer equal to the input vector x (a 24x24 picture), 
@@ -231,8 +233,8 @@ class BackPropagation:
                 for l in range(self.L):
                     self.batch_a[l].fill(0.0)
         
-        fnn_utils.save_pic(epochs, epsilon, batch_size)
-        return test_acc_log
+        fnn_utils.save_pic(epochs, epsilon, batch_size, self.network_shape)
+        return test_acc_log, train_acc_log
 
 
 # Start training with default parameters.
@@ -240,8 +242,8 @@ class BackPropagation:
 def main():
     start_time = time.time()
     
-    # Find a best epoch
-    # best_epoch = find_epoch()
+    # Find a best network topology
+    # best_network_shape = find_topology()
     
     # Find a best learning rate
     # best_epsilon = find_epsilon(epoch=best_epoch)
@@ -251,20 +253,68 @@ def main():
     # best_batch_size = find_batch_size(epoch=best_epoch, epsilon=best_epsilon)
     # best_batch_size = find_batch_size()
     
+    # Find a best epoch
+    # best_epoch = find_epoch()
+    
     # Final test
-    bp = BackPropagation()
-    test_acc_log = bp.sgd(
-                            # batch_size=best_batch_size, 
-                            # epsilon=best_epsilon, 
-                            # epochs=best_epoch,
+    bp = BackPropagation(
+                            # network_shape = best_network_shape
                             )
+    test_acc_log, train_acc_log = bp.sgd(
+                                            # batch_size=best_batch_size, 
+                                            # epsilon=best_epsilon, 
+                                            # epochs=best_epoch,
+                                            )
     
     end_time = time.time()
     
-    print_msg(test_acc_log, int(end_time - start_time))  
+    print_msg(test_acc_log, train_acc_log, int(end_time - start_time))  
     
     input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
    
+
+def find_topology(epochs=15, epsilon=0.1, batch_size=32):
+    # network_shape_pool = [[784,20,20,20,10]]
+    network_shape_pool = [
+                            # layer 6
+                            [784,10,10,10,10,10],
+                            [784,20,20,20,20,10],
+                            [784,30,30,30,30,10],
+                            [784,40,40,40,40,10],
+                            [784,50,50,50,50,10],
+                            [784,60,60,60,60,10],
+                            [784,70,70,70,70,10],
+                            [784,80,80,80,80,10],
+                            [784,90,90,90,90,10],
+                            # layer 7
+                            [784,10,10,10,10,10,10],
+                            [784,20,20,20,20,20,10],
+                            [784,30,30,30,30,30,10],
+                            [784,40,40,40,40,40,10],
+                            [784,50,50,50,50,50,10],
+                            [784,60,60,60,60,60,10],
+                            [784,70,70,70,70,70,10],
+                            [784,80,80,80,80,80,10],
+                            [784,90,90,90,90,90,10],
+                         ]
+    final_accuracy = list()
+    for network_shape in network_shape_pool:
+        start_time = time.time()
+        bp = BackPropagation(network_shape=network_shape)
+        test_acc_log, train_acc_log = bp.sgd(epochs=epochs, epsilon=epsilon, batch_size=batch_size)
+        end_time = time.time()
+        
+        final_accuracy.append(test_acc_log[-1]) 
+        
+        print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size, network_shape=network_shape) 
+        del bp
+        
+    best_network_shape = network_shape_pool[np.argmax(final_accuracy)]
+    print("network_shape_pool:", network_shape_pool)
+    print("final_accuracy:", final_accuracy)
+    print("best_network_shape:", best_network_shape)
+    return best_network_shape 
+
 
 def find_epoch(epsilon=0.01, batch_size=50):
     # epoch_pool = list(range(25,30))
@@ -273,13 +323,13 @@ def find_epoch(epsilon=0.01, batch_size=50):
     for epoch in epoch_pool:
         start_time = time.time()
         bp = BackPropagation()
-        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
+        test_acc_log, train_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
         end_time = time.time()
         
         best_epoch = np.argmax(test_acc_log) + 1
         best_epoch_list.append(best_epoch)
         
-        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)     
+        print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)     
         
     from collections import Counter
     best_epoch = Counter(best_epoch_list).most_common(1)[0][0]
@@ -295,12 +345,12 @@ def find_epsilon(epoch=15, batch_size=50):
     for epsilon in epsilon_pool:
         start_time = time.time()
         bp = BackPropagation()
-        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
+        test_acc_log, train_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
         
-        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
+        print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
     best_epsilon = epsilon_pool[np.argmax(final_accuracy)]
     print("epsilon_pool:", epsilon_pool)
@@ -315,12 +365,12 @@ def find_batch_size(epoch=15, epsilon=0.01):
     for batch_size in batch_size_pool:
         start_time = time.time()
         bp = BackPropagation()
-        test_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
+        test_acc_log, train_acc_log = bp.sgd(epochs=epoch, epsilon=epsilon, batch_size=batch_size)
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
         
-        print_msg(test_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
+        print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
     best_batch_size = batch_size_pool[np.argmax(final_accuracy)]
     print("batch_size_pool:", batch_size_pool)
@@ -329,13 +379,17 @@ def find_batch_size(epoch=15, epsilon=0.01):
     return best_batch_size 
 
 
-def print_msg(test_acc_log, time_consumption=str(), epsilon=None, batch_size=None):
+def print_msg(test_acc_log, train_acc_log, time_consumption=str(), epsilon=None, batch_size=None, network_shape=None):
     print(str())
+    if network_shape:
+        print("Network_shape:", network_shape)
     if epsilon:
         print("Epsilon:", epsilon)
     if batch_size:
         print("Batch_size:", batch_size)
-    print("Accuracy of %s epochs: %s" % (len(test_acc_log), test_acc_log))
+    print("Epochs:", len(test_acc_log))
+    print("train_acc_log:", train_acc_log)
+    print("test_acc_log:", test_acc_log)
     print("The Highest Accuracy is %s in epoch: %s" % (max(test_acc_log), np.argmax(test_acc_log) + 1))
     print("Time consumption:", time_consumption, "seconds")
     print("The Final Accuracy:", test_acc_log[-1])
