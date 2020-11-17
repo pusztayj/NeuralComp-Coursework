@@ -243,7 +243,7 @@ def main():
     start_time = time.time()
     
     # Find a best network topology
-    # best_network_shape = find_topology()
+    best_network_shape = find_topology()
     
     # Find a best learning rate
     # best_epsilon = find_epsilon(epoch=best_epoch)
@@ -277,15 +277,15 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
     # network_shape_pool = [[784,20,20,20,10]]
     network_shape_pool = [
                             # layer 6
-                            [784,10,10,10,10,10],
-                            [784,20,20,20,20,10],
-                            [784,30,30,30,30,10],
-                            [784,40,40,40,40,10],
-                            [784,50,50,50,50,10],
-                            [784,60,60,60,60,10],
-                            [784,70,70,70,70,10],
-                            [784,80,80,80,80,10],
-                            [784,90,90,90,90,10],
+##                            [784,10,10,10,10,10],
+##                            [784,20,20,20,20,10],
+##                            [784,30,30,30,30,10],
+##                            [784,40,40,40,40,10],
+##                            [784,50,50,50,50,10],
+##                            [784,60,60,60,60,10],
+##                            [784,70,70,70,70,10],
+##                            [784,80,80,80,80,10],
+##                            [784,90,90,90,90,10],
                             # layer 7
                             [784,10,10,10,10,10,10],
                             [784,20,20,20,20,20,10],
@@ -295,8 +295,7 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
                             [784,60,60,60,60,60,10],
                             [784,70,70,70,70,70,10],
                             [784,80,80,80,80,80,10],
-                            [784,90,90,90,90,90,10],
-                         ]
+                            [784,90,90,90,90,90,10]]
     final_accuracy = list()
     average_accuracy = list()
     for network_shape in network_shape_pool:
