@@ -160,7 +160,7 @@ class BackPropagation:
         
         # In each "epoch", the network is exposed to the entire training set.
         for t in range(epochs):
-
+            print("epoch: ",t)
             # We will order the training data using a random permutation.
             permutation = np.random.permutation(N)
             
@@ -287,11 +287,11 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
 ##                            [784,80,80,80,80,10],
 ##                            [784,90,90,90,90,10],
                             # layer 7
-                            [784,10,10,10,10,10,10],
-                            [784,20,20,20,20,20,10],
-                            [784,30,30,30,30,30,10],
-                            [784,40,40,40,40,40,10],
-                            [784,50,50,50,50,50,10],
+                            #[784,10,10,10,10,10,10],
+                            #[784,20,20,20,20,20,10],
+                            #[784,30,30,30,30,30,10],
+                            #[784,40,40,40,40,40,10],
+                            #[784,50,50,50,50,50,10],
                             [784,60,60,60,60,60,10],
                             [784,70,70,70,70,70,10],
                             [784,80,80,80,80,80,10],
