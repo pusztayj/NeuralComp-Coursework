@@ -298,6 +298,7 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
                             [784,90,90,90,90,90,10],
                          ]
     final_accuracy = list()
+    average_accuracy = list()
     for network_shape in network_shape_pool:
         start_time = time.time()
         bp = BackPropagation(network_shape=network_shape)
@@ -305,13 +306,16 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
+        average_accuracy.append(np.mean(test_acc_log[1:]))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size, network_shape=network_shape) 
         del bp
         
-    best_network_shape = network_shape_pool[np.argmax(final_accuracy)]
+    # best_network_shape = network_shape_pool[np.argmax(final_accuracy)]
+    best_network_shape = network_shape_pool[np.argmax(average_accuracy)]
     print("network_shape_pool:", network_shape_pool)
     print("final_accuracy:", final_accuracy)
+    print("average_accuracy:", average_accuracy)
     print("best_network_shape:", best_network_shape)
     return best_network_shape 
 
@@ -342,6 +346,7 @@ def find_epoch(epsilon=0.01, batch_size=50):
 def find_epsilon(epoch=15, batch_size=50):
     epsilon_pool = [0.001,0.003,0.005,0.007,0.009,0.01,0.02,0.04,0.06,0.08,0.1,0.2,0.4,0.6,0.8]
     final_accuracy = list()
+    average_accuracy = list()
     for epsilon in epsilon_pool:
         start_time = time.time()
         bp = BackPropagation()
@@ -349,12 +354,14 @@ def find_epsilon(epoch=15, batch_size=50):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
+        average_accuracy.append(np.mean(test_acc_log[1:]))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
-    best_epsilon = epsilon_pool[np.argmax(final_accuracy)]
+    best_epsilon = epsilon_pool[np.argmax(average_accuracy)]
     print("epsilon_pool:", epsilon_pool)
     print("final_accuracy:", final_accuracy)
+    print("average_accuracy:", average_accuracy)
     print("best_epsilon:", best_epsilon)
     return best_epsilon    
    
@@ -362,6 +369,7 @@ def find_epsilon(epoch=15, batch_size=50):
 def find_batch_size(epoch=15, epsilon=0.01):
     batch_size_pool = [1,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,200]
     final_accuracy = list()
+    average_accuracy = list()
     for batch_size in batch_size_pool:
         start_time = time.time()
         bp = BackPropagation()
@@ -369,12 +377,14 @@ def find_batch_size(epoch=15, epsilon=0.01):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
+        average_accuracy.append(np.mean(test_acc_log[1:]))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
-    best_batch_size = batch_size_pool[np.argmax(final_accuracy)]
+    best_batch_size = batch_size_pool[np.argmax(average_accuracy)]
     print("batch_size_pool:", batch_size_pool)
     print("final_accuracy:", final_accuracy)
+    print("average_accuracy:", average_accuracy)
     print("best_batch_size:", best_batch_size)
     return best_batch_size 
 
@@ -393,6 +403,7 @@ def print_msg(test_acc_log, train_acc_log, time_consumption=str(), epsilon=None,
     print("The Highest Accuracy is %s in epoch: %s" % (max(test_acc_log), np.argmax(test_acc_log) + 1))
     print("Time consumption:", time_consumption, "seconds")
     print("The Final Accuracy:", test_acc_log[-1])
+    print("The Average Accuracy:", np.mean(test_acc_log[1:]))
     print(str())
 
 
