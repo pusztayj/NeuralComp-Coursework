@@ -306,7 +306,7 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
-        average_accuracy.append(np.mean(test_acc_log[1:]))
+        average_accuracy.append(round(np.mean(test_acc_log[1:]),3))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size, network_shape=network_shape) 
         del bp
@@ -354,7 +354,7 @@ def find_epsilon(epoch=15, batch_size=50):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
-        average_accuracy.append(np.mean(test_acc_log[1:]))
+        average_accuracy.append(round(np.mean(test_acc_log[1:]),3))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
@@ -377,7 +377,7 @@ def find_batch_size(epoch=15, epsilon=0.01):
         end_time = time.time()
         
         final_accuracy.append(test_acc_log[-1]) 
-        average_accuracy.append(np.mean(test_acc_log[1:]))
+        average_accuracy.append(round(np.mean(test_acc_log[1:]),3))
         
         print_msg(test_acc_log, train_acc_log, int(end_time - start_time), epsilon=epsilon, batch_size=batch_size)  
     
@@ -403,7 +403,7 @@ def print_msg(test_acc_log, train_acc_log, time_consumption=str(), epsilon=None,
     print("The Highest Accuracy is %s in epoch: %s" % (max(test_acc_log), np.argmax(test_acc_log) + 1))
     print("Time consumption:", time_consumption, "seconds")
     print("The Final Accuracy:", test_acc_log[-1])
-    print("The Average Accuracy:", np.mean(test_acc_log[1:]))
+    print("The Average Accuracy:", round(np.mean(test_acc_log[1:]),3))
     print(str())
 
 
