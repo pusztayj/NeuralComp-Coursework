@@ -135,7 +135,7 @@ class BackPropagation:
             batch_size=50,
             epsilon=0.01,
             # epochs=1000):
-            epochs=10):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
+            epochs=30):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
 
         """ Mini-batch gradient descent on training data.
 
@@ -273,7 +273,7 @@ def main():
     input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
    
 
-def find_topology(epochs=15, epsilon=0.1, batch_size=32):
+def find_topology(epochs=35, epsilon=0.01, batch_size=50):
     # network_shape_pool = [[784,20,20,20,10]]
     network_shape_pool = [
                             # layer 6
@@ -292,10 +292,10 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
                             #[784,30,30,30,30,30,10],
                             #[784,40,40,40,40,40,10],
                             #[784,50,50,50,50,50,10],
-                            [784,60,60,60,60,60,10],
-                            [784,70,70,70,70,70,10],
-                            [784,80,80,80,80,80,10],
-                            [784,90,90,90,90,90,10]]
+                            [784,17,17,17,17,17,10]]
+                            #[784,70,70,70,70,70,10],
+                            #[784,80,80,80,80,80,10],
+                            #[784,90,90,90,90,90,10]]
     final_accuracy = list()
     average_accuracy = list()
     for network_shape in network_shape_pool:
