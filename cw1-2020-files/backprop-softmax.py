@@ -245,7 +245,7 @@ class BackPropagation:
 # Start training with default parameters.
 
 def main():
-    start_time = time.time()
+    # start_time = time.time()
     
     # Find a best network topology
     # best_network_shape = find_topology()
@@ -263,18 +263,21 @@ def main():
     # best_epoch = find_epoch()
     
     # Final test
-    bp = BackPropagation(
+    # bp = BackPropagation(
                             # network_shape = best_network_shape
-                            )
-    test_acc_log, train_acc_log, loss_log = bp.sgd(
+                            # )
+    # test_acc_log, train_acc_log, loss_log = bp.sgd(
                                             # batch_size=best_batch_size, 
                                             # epsilon=best_epsilon, 
                                             # epochs=best_epoch,
-                                            )
+                                            # )
     
-    end_time = time.time()
+    # end_time = time.time()
     
-    print_msg(test_acc_log, train_acc_log, loss_log, int(end_time - start_time), network_shape=bp.network_shape)  
+    # print_msg(test_acc_log, train_acc_log, loss_log, int(end_time - start_time), network_shape=bp.network_shape)
+    
+    bp = BackPropagation()
+    bp.sgd()
    
 
 def find_topology(epochs=20, epsilon=0.15, batch_size=32):
