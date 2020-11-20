@@ -334,8 +334,7 @@ def find_topology(epochs=20, epsilon=0.15, batch_size=32):
 def find_epoch(epsilon=0.15, batch_size=32, network_shape=[784,60,60,60,60,10]):
     # epoch_pool = list(range(25,30))
     # epoch_pool = [10,15,20,25,30,50,80,100,150,200]
-    # epoch_pool = [20,25,30,35,40,45,50]
-    epoch_pool = [50]
+    epoch_pool = [20,25,30,35,40,45,50]
     best_epoch_list = list()
     average_loss = list()
     for epochs in epoch_pool:
@@ -363,8 +362,7 @@ def find_epoch(epsilon=0.15, batch_size=32, network_shape=[784,60,60,60,60,10]):
 def find_epsilon(epochs=20, batch_size=32, network_shape=[784,60,60,60,60,10]):
     # epsilon_pool = [0.01,0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26,0.28]
     # epsilon_pool = [0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24]                         # best 0.14
-    # epsilon_pool = [0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18]                              # best 0.15
-    epsilon_pool = [0.1]
+    epsilon_pool = [0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18]                                # best 0.15
     final_accuracy = list()
     average_accuracy = list()
     average_loss = list()
@@ -393,10 +391,9 @@ def find_epsilon(epochs=20, batch_size=32, network_shape=[784,60,60,60,60,10]):
    
    
 def find_batch_size(epochs=20, epsilon=0.15, network_shape=[784,60,60,60,60,10]):
-    # batch_size_pool = [1,2,4,8,16,32,64,128,256,512]                      # best 32
+    batch_size_pool = [1,2,4,8,16,32,64,128,256,512]                        # best 32
     # batch_size_pool = [20,25,30,32,35,40,45,50]                           # best 30
     # batch_size_pool = [25,26,27,28,29,30,31,32,33,34,35]                  # best 30
-    batch_size_pool = [35]
     final_accuracy = list()
     average_accuracy = list()
     average_loss = list()
