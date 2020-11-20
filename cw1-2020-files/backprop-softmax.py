@@ -43,13 +43,13 @@ class BackPropagation:
         self.crossings = [(1 if i < 1 else network_shape[i-1],network_shape[i]) for i in range(self.L)]
 
         # Create the network
-        self.a             = [np.zeros(m) for m in network_shape] # output from layer
-        self.db            = [np.zeros(m) for m in network_shape] # local gradiant for bias?
-        self.b             = [np.random.normal(0,1/10,m) for m in network_shape] # bias
-        self.z             = [np.zeros(m) for m in network_shape] # neurons
+        self.a             = [np.zeros(m) for m in network_shape] 
+        self.db            = [np.zeros(m) for m in network_shape]                                                       # derivative of bias
+        self.b             = [np.random.normal(0,1/10,m) for m in network_shape]                                        # bias
+        self.z             = [np.zeros(m) for m in network_shape] 
         self.delta         = [np.zeros(m) for m in network_shape] 
-        self.w             = [np.random.uniform(-1/np.sqrt(m0),1/np.sqrt(m0),(m1,m0)) for (m0,m1) in self.crossings] # weights
-        self.dw            = [np.zeros((m1,m0)) for (m0,m1) in self.crossings] # derivative of weights
+        self.w             = [np.random.uniform(-1/np.sqrt(m0),1/np.sqrt(m0),(m1,m0)) for (m0,m1) in self.crossings]    # weights
+        self.dw            = [np.zeros((m1,m0)) for (m0,m1) in self.crossings]                                          # derivative of weights
         self.nabla_C_out   = np.zeros(network_shape[-1])
 
         # Choose activation function
@@ -67,7 +67,7 @@ class BackPropagation:
         """
         # TODO
         # self.a[0] = x - 0.5      # Center the input values between [-0.5,0.5]
-        self.a[0] = x/255 - 0.5    # attempt to normalize
+        self.a[0] = x/255 - 0.5    # normalize
          
         for i in range(1,len(self.z)):
             self.z[i] = np.dot(self.w[i],self.a[i-1]) + self.b[i]
@@ -138,8 +138,8 @@ class BackPropagation:
     def sgd(self,
             batch_size=50,
             epsilon=0.01,
-            # epochs=1000):
-            epochs=10):      # I think 5-10 is enough to quickly check the performance of the model. However, we can adjust it for task 6
+            epochs=1000):
+            # epochs=10):      # Quickly check the performance of the model
 
         """ Mini-batch gradient descent on training data.
 
@@ -274,11 +274,9 @@ def main():
     end_time = time.time()
     
     print_msg(test_acc_log, train_acc_log, loss_log, int(end_time - start_time), network_shape=bp.network_shape)  
-    
-    input("Press enter to continue...")     # To keep the program from shutting down, so that we can see the final result. We can delete it later.
    
 
-def find_topology(epochs=15, epsilon=0.1, batch_size=32):
+def find_topology(epochs=20, epsilon=0.15, batch_size=32):
     # network_shape_pool = [[784,20,20,20,10]]
     network_shape_pool = [
                             # layer 6
@@ -333,7 +331,7 @@ def find_topology(epochs=15, epsilon=0.1, batch_size=32):
     return best_network_shape 
 
 
-def find_epoch(epsilon=0.15, batch_size=30, network_shape=[784,60,60,60,60,10]):
+def find_epoch(epsilon=0.15, batch_size=32, network_shape=[784,60,60,60,60,10]):
     # epoch_pool = list(range(25,30))
     # epoch_pool = [10,15,20,25,30,50,80,100,150,200]
     # epoch_pool = [20,25,30,35,40,45,50]
@@ -362,7 +360,7 @@ def find_epoch(epsilon=0.15, batch_size=30, network_shape=[784,60,60,60,60,10]):
     return best_epoch
 
 
-def find_epsilon(epochs=15, batch_size=32, network_shape=[784,60,60,60,60,10]):
+def find_epsilon(epochs=20, batch_size=32, network_shape=[784,60,60,60,60,10]):
     # epsilon_pool = [0.01,0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26,0.28]
     # epsilon_pool = [0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24]                         # best 0.14
     # epsilon_pool = [0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18]                              # best 0.15
@@ -394,7 +392,7 @@ def find_epsilon(epochs=15, batch_size=32, network_shape=[784,60,60,60,60,10]):
     return best_epsilon    
    
    
-def find_batch_size(epochs=15, epsilon=0.15, network_shape=[784,60,60,60,60,10]):
+def find_batch_size(epochs=20, epsilon=0.15, network_shape=[784,60,60,60,60,10]):
     # batch_size_pool = [1,2,4,8,16,32,64,128,256,512]                      # best 32
     # batch_size_pool = [20,25,30,32,35,40,45,50]                           # best 30
     # batch_size_pool = [25,26,27,28,29,30,31,32,33,34,35]                  # best 30
