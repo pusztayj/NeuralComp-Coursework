@@ -1,8 +1,11 @@
-
-# Neural Computation (Extended)
-# CW1: Backpropagation and Softmax
-# Autumn 2020
-#
+"""
+Neural Computation (Extended)
+CW1: Backpropagation and Softmax
+Autumn 2020
+Group 14
+Teodora-Maria Filip, Parth Kelkar, Letian Li
+Justin Pusztay, Tauseef Rehman, Harpal Toor
+"""
 
 import numpy as np
 import time
