@@ -26,6 +26,11 @@ def tanh(x):
     return np.tanh(x)
 def tanh_d(x):
     return 1-np.tanh(x)**2
+def lrelu(x):
+    return np.array([max(0.01*i,i) for i in x])
+def lrelu_d(x):
+    if type(x) is np.ndarray:
+        return np.array([1 if i >0 else 0.01 for i in x ])
 
 
 class BackPropagation:
