@@ -1,4 +1,0 @@
-Learning Rate,Batch Size,Epochs,Loss Function,Optimizer,Activation,Mean Dice,Validation Loss
-0.3,4,10,Tversky,ADAM,LEAKYRELU,0.0,-0.28627354
-Learning Rate,Batch Size,Epochs,Loss Function,Optimizer,Activation,Mean Dice,Validation Loss
-0.6,4,10,Tversky,ADAM,LEAKYRELU,0.0,-0.27822152
